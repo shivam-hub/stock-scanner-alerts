@@ -30,5 +30,9 @@ jobs:
         CHARTINK_CONDITION: ${{ secrets.CHARTINK_CONDITION }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        MONGODB_USERNAME: ${{ secrets.MONGODB_USERNAME }}
+        MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
+        MONGODB_APPNAME: ${{ secrets.MONGODB_APPNAME }}
+        MONGODB_CLUSTER: ${{ secrets.MONGODB_CLUSTER }}
       run: |
         python -m stock_scanner.main
