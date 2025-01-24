@@ -1,4 +1,3 @@
-# chartink_alerts/chartink_api.py
 import requests
 import pandas as pd
 from bs4 import BeautifulSoup

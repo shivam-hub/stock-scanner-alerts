@@ -1,43 +1,37 @@
-# chartink_alerts/main.py
 from datetime import datetime
 from .config import CHARTINK_CONDITION
 from .stock_scan import GetDataFromChartink
 from .alert_manager import send_telegram_alert, load_alerts, save_alerts
 
 def main():
-    # Load previously sent alerts
-    alerts_sent = load_alerts()
-    today = datetime.now().strftime("%Y-%m-%d")
-    if today not in alerts_sent:
-        alerts_sent[today] = []
 
-    # Get stock data from Chartink
+    alerts_sent = load_alerts()
+    alert_failed = []
     data = GetDataFromChartink(CHARTINK_CONDITION)
     data = data.sort_values(by='per_chg', ascending=False)
 
-    # Process each stock and send alerts for new ones
     for index, row in data.iterrows():
         nsecode = row['nsecode']
-        if nsecode not in alerts_sent[today]:
-            # Prepare alert message
+        if nsecode not in alerts_sent:
+
             message = (
-                f"Stock Alert:\n"
-                f"Name: {row['name']}\n"
-                f"NSE Code: {row['nsecode']}\n"
-                f"Close Price: {row['close']}\n"
-                f"Percentage Change: {row['per_chg']}%\n"
-                f"Volume: {row['volume']}\n"
+                f"<b>Stock Alert:</b> {datetime.now().time()}\n"
+                f"<b>Name:</b> {row['name']}\n\n"
+                f"<b>NSE Code:</b> <em>{row['nsecode']}</em>\n"
+                f"<b>Close Price:</b> <em>{row['close']}</em>\n\n"
+                f"<b>Percentage Change:</b> {row['per_chg']}%\n"
+                f"<b>Volume:</b> {row['volume']}\n"
             )
 
-            send_telegram_alert(message)
+            isSuccess = send_telegram_alert(message)
 
-            # Mark stock as alerted
-            alerts_sent[today].append(nsecode)
+            if isSuccess:
+                alerts_sent.append(nsecode)
+            else:
+                alert_failed.append(nsecode)
 
     print(data)
-
-    # Save updated alerts
-    save_alerts(alerts_sent)
+    save_alerts(alerts_sent, alert_failed)
 
 if __name__ == "__main__":
     main()
