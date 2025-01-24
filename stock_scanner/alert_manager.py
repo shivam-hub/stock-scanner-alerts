@@ -4,7 +4,9 @@ import time
 from datetime import datetime
 from pymongo import MongoClient
 
-client = MongoClient('mongodb+srv://%s:%s@%s.awl7l.mongodb.net/?retryWrites=true&w=majority&appName=%s' % (MONGODB_USERNAME, MONGODB_PASSWORD, MONGODB_CLUSTER, MONGODB_APPNAME))
+MONGO_CONN='mongodb+srv://%s:%s@%s.awl7l.mongodb.net/?retryWrites=true&w=majority&appName=%s' % (MONGODB_USERNAME, MONGODB_PASSWORD, MONGODB_CLUSTER, MONGODB_APPNAME)
+print(MONGO_CONN)
+client = MongoClient(MONGO_CONN)
 db = client['stock_alerts_db']
 alerts_collection = db['alerts_sent'] 
 
