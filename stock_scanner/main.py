@@ -4,11 +4,26 @@ from .stock_scan import GetDataFromChartink
 from .alert_manager import send_telegram_alert, load_alerts, save_alerts
 
 def main():
-
     alerts_sent = load_alerts()
+    if alerts_sent is None:
+        print("Error: Unable to load alerts. Exiting.")
+        return
+
     alert_failed = []
+
     data = GetDataFromChartink(CHARTINK_CONDITION)
-    data = data.sort_values(by='per_chg', ascending=False)
+    if data is None or len(data) == 0:
+        print("No data found or failed to retrieve data. Exiting.")
+        return
+
+    if not data.empty:
+        data = data.sort_values(by='per_chg', ascending=False)
+    else:
+        print("Data is empty after retrieval. Exiting.")
+        return
+    
+    print(data)
+
 
     for index, row in data.iterrows():
         nsecode = row['nsecode']
