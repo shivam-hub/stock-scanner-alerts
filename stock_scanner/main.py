@@ -3,6 +3,7 @@ from .config import CHARTINK_CONDITION
 from .stock_scan import GetDataFromChartink
 from .alert_manager import send_telegram_alert, load_alerts, save_alerts
 
+
 def main():
     alerts_sent = load_alerts()
     if alerts_sent is None:
